@@ -1,0 +1,762 @@
+Index: blog4/src/main/resources/templates/create.html
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/blog4/src/main/resources/templates/create.html b/blog4/src/main/resources/templates/create.html
+--- a/blog4/src/main/resources/templates/create.html	(revision c9c804ce9e6ff78e22031085db5caf6752baa3c6)
++++ b/blog4/src/main/resources/templates/create.html	(date 1658409138313)
+@@ -16,9 +16,15 @@
+             <label>Name</label>
+             <input type="text" th:field="*{name}"/>
+         </div>
++        <div>
++            <label>Category</label>
++            <select th:field="*{category}">
++                <option th:each="item : ${category}" th:value="${item.id}" th:text="${item.categoryName}" ></option>
++            </select>
++        </div>
+         <input type="submit" value="Save"/>
+     </form>
+ </div>
+ <footer th:replace="/layout :: footer"></footer>
+ </body>
+-</html>
+\ No newline at end of file
++</html>
+Index: blog4/src/main/resources/templates/delete.html
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/blog4/src/main/resources/templates/delete.html b/blog4/src/main/resources/templates/delete.html
+--- a/blog4/src/main/resources/templates/delete.html	(revision c9c804ce9e6ff78e22031085db5caf6752baa3c6)
++++ b/blog4/src/main/resources/templates/delete.html	(date 1658393268523)
+@@ -4,29 +4,17 @@
+ <body>
+ <h3>Remove Product</h3>
+ <p>
+-    <a th:href="@{/product}">
+-        Back to product list
++    <a th:href="@{/blog}">
++        Back to blog list
+     </a>
+ </p>
+ <div id="form">
+-    <form action="#" th:action="@{/product/delete}" th:object="${product}"
++    <form action="#" th:action="@{/blog/delete}" th:object="${blog}"
+           method="POST" novalidate="novalidate">
+         <input type="hidden" th:field="*{id}"/>
+         <div>
+             <label>Name</label>
+             <input type="text" th:field="*{name}"/>
+-        </div>
+-        <div>
+-            <label>Price</label>
+-            <input type="number" th:field="*{price}"/>
+-        </div>
+-        <div>
+-            <label>Description</label>
+-            <input type="text" th:field="*{description}"/>
+-        </div>
+-        <div>
+-            <label>Manufacturing</label>
+-            <input type="text" th:field="*{manufacturing}"/>
+         </div>
+         <input type="submit" value="Remove"/>
+     </form>
+Index: blog4/src/main/java/com/example/repository/ICategoryRepository.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/blog4/src/main/java/com/example/repository/ICategoryRepository.java b/blog4/src/main/java/com/example/repository/ICategoryRepository.java
+new file mode 100644
+--- /dev/null	(date 1658415154687)
++++ b/blog4/src/main/java/com/example/repository/ICategoryRepository.java	(date 1658415154687)
+@@ -0,0 +1,14 @@
++package com.example.repository;
++
++import com.example.model.Category;
++import org.springframework.data.jpa.repository.JpaRepository;
++import org.springframework.data.jpa.repository.Query;
++import org.springframework.transaction.annotation.Transactional;
++
++import java.util.Set;
++
++
++public interface ICategoryRepository extends JpaRepository<Category, Integer> {
++    @Query(value = " select * from category ", nativeQuery = true)
++    Set<Category> getAllCategory();
++}
+Index: blog4/src/main/java/com/example/service/ICategoryService.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/blog4/src/main/java/com/example/service/ICategoryService.java b/blog4/src/main/java/com/example/service/ICategoryService.java
+new file mode 100644
+--- /dev/null	(date 1658412259218)
++++ b/blog4/src/main/java/com/example/service/ICategoryService.java	(date 1658412259218)
+@@ -0,0 +1,12 @@
++package com.example.service;
++
++import com.example.model.Category;
++
++import java.util.List;
++import java.util.Set;
++
++public interface ICategoryService {
++    Set<Category> getAllCategory();
++
++    Category findById(int id);
++}
+Index: blog4/src/main/java/com/example/service/CategoryImpl.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/blog4/src/main/java/com/example/service/CategoryImpl.java b/blog4/src/main/java/com/example/service/CategoryImpl.java
+new file mode 100644
+--- /dev/null	(date 1658415202100)
++++ b/blog4/src/main/java/com/example/service/CategoryImpl.java	(date 1658415202100)
+@@ -0,0 +1,26 @@
++package com.example.service;
++
++import com.example.model.Category;
++import com.example.repository.ICategoryRepository;
++import org.springframework.beans.factory.annotation.Autowired;
++import org.springframework.stereotype.Service;
++
++import java.util.List;
++import java.util.Set;
++
++@Service
++public class CategoryImpl implements ICategoryService {
++
++    @Autowired
++    ICategoryRepository categoryRepository;
++
++    @Override
++    public Set<Category> getAllCategory() {
++        return categoryRepository.getAllCategory();
++    }
++
++    @Override
++    public Category findById(int id) {
++        return categoryRepository.findById(id).orElse(null);
++    }
++}
+Index: blog4/src/main/java/com/example/repository/IBlogRepository.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/blog4/src/main/java/com/example/repository/IBlogRepository.java b/blog4/src/main/java/com/example/repository/IBlogRepository.java
+--- a/blog4/src/main/java/com/example/repository/IBlogRepository.java	(revision c9c804ce9e6ff78e22031085db5caf6752baa3c6)
++++ b/blog4/src/main/java/com/example/repository/IBlogRepository.java	(date 1658415885292)
+@@ -1,10 +1,47 @@
+ package com.example.repository;
+ 
+ import com.example.model.Blog;
++import org.springframework.data.domain.Page;
++import org.springframework.data.domain.Pageable;
+ import org.springframework.data.jpa.repository.JpaRepository;
++import org.springframework.data.jpa.repository.Modifying;
++import org.springframework.data.jpa.repository.Query;
++import org.springframework.data.repository.query.Param;
+ import org.springframework.transaction.annotation.Transactional;
+ 
+-@Transactional
++import java.util.List;
++
+ public interface IBlogRepository extends JpaRepository<Blog,Integer> {
+ 
++    List<Blog> findByName(String name);
++    List<Blog> findByNameContaining(String name);
++
++    /*tìm theo tên tương đối và id lớn hơn 2*/
++    List<Blog> findByNameContainingAndIdGreaterThan(String name, int id);
++
++    @Query(value = "select * from blog where name = :keyword", nativeQuery = true)
++    List<Blog> searchByName(@Param("keyword") String name);
++
++    @Query(value = " select * from blog where title like :searchValue ", nativeQuery = true,
++            countQuery = " select count(*) from (select * from blog where title like :searchValue ) temp_table ")
++    Page<Blog> getAllBlog(@Param("searchValue") String searchValue , Pageable pageable);
++
++    @Modifying
++    @Transactional
++    @Query(value = " delete from blog b " +
++            " where b.id = :id ", nativeQuery = true)
++    void delete(@Param("id") int id);
++
++    @Query(value = " select * " +
++            " from blog b where b.id = :id", nativeQuery = true)
++    Blog findById(@Param("id") int id);
++
++    @Query(value = " select * " +
++            " from blog b where b.id = :id", nativeQuery = true)
++    Blog getBlog(@Param("id") int id);
++
++//    @Modifying
++//    @Query(value = "update blog set name = :name where id = :id", nativeQuery = true)
++//    void update( @Param("name") String name, @Param("id") Integer id);
++
+ }
+Index: blog4/src/main/java/com/example/model/Blog.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/blog4/src/main/java/com/example/model/Blog.java b/blog4/src/main/java/com/example/model/Blog.java
+--- a/blog4/src/main/java/com/example/model/Blog.java	(revision c9c804ce9e6ff78e22031085db5caf6752baa3c6)
++++ b/blog4/src/main/java/com/example/model/Blog.java	(date 1658411512325)
+@@ -1,9 +1,7 @@
+ package com.example.model;
+ 
+-import javax.persistence.Entity;
+-import javax.persistence.GeneratedValue;
+-import javax.persistence.GenerationType;
+-import javax.persistence.Id;
++import javax.persistence.*;
++import java.util.Set;
+ 
+ @Entity
+ public class Blog {
+@@ -16,6 +14,13 @@
+     public Blog() {
+     }
+ 
++    @ManyToOne
++    @JoinColumn(name = "category_id", referencedColumnName = "id")
++    private Category category;
++
++//    @OneToMany(mappedBy = "blog")
++//    private Set<Category> category;
++
+     public Blog(int id, String name) {
+         this.id = id;
+         this.name = name;
+@@ -44,4 +49,12 @@
+                 ", name='" + name + '\'' +
+                 '}';
+     }
++
++    public Category getCategory() {
++        return category;
++    }
++
++    public void setCategory(Category category) {
++        this.category = category;
++    }
+ }
+Index: blog4/src/main/java/com/example/service/IBlogService.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/blog4/src/main/java/com/example/service/IBlogService.java b/blog4/src/main/java/com/example/service/IBlogService.java
+--- a/blog4/src/main/java/com/example/service/IBlogService.java	(revision c9c804ce9e6ff78e22031085db5caf6752baa3c6)
++++ b/blog4/src/main/java/com/example/service/IBlogService.java	(date 1658412940947)
+@@ -1,8 +1,11 @@
+ package com.example.service;
+ 
+ import com.example.model.Blog;
++import org.springframework.data.domain.Page;
++import org.springframework.data.domain.Pageable;
+ 
+ import java.util.List;
++import java.util.Optional;
+ 
+ public interface IBlogService {
+ 
+@@ -10,4 +13,12 @@
+ 
+     void save(Blog blog);
+ 
++    Blog findById(int id);
++
++    void delete(int id);
++
++    List<Blog> searchByName(String keyword);
++
++    Blog getBlog(int id);
++
+ }
+Index: blog4/src/main/resources/templates/view.html
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/blog4/src/main/resources/templates/view.html b/blog4/src/main/resources/templates/view.html
+--- a/blog4/src/main/resources/templates/view.html	(revision c9c804ce9e6ff78e22031085db5caf6752baa3c6)
++++ b/blog4/src/main/resources/templates/view.html	(date 1658393608071)
+@@ -4,30 +4,18 @@
+ <body>
+ <h3>View Product</h3>
+ <p>
+-    <a th:href="@{/product}">
++    <a th:href="@{/blog}">
+         Back to product list
+     </a>
+ </p>
+ <div id="detail">
+     <div class="cusdetail">
+         <label>ID:</label>
+-        <label th:text="${product.id}"></label>
++        <label th:text="${blog.id}"></label>
+     </div>
+     <div class="cusdetail">
+         <label>Name:</label>
+-        <label th:text="${product.name}"></label>
+-    </div>
+-    <div class="cusdetail">
+-        <label>Price:</label>
+-        <label th:text="${product.price}"></label>
+-    </div>
+-    <div class="cusdetail">
+-        <label>Email:</label>
+-        <label th:text="${product.description}"></label>
+-    </div>
+-    <div class="cusdetail">
+-        <label>Address:</label>
+-        <label th:text="${product.manufacturing}"></label>
++        <label th:text="${blog.name}"></label>
+     </div>
+ </div>
+ <footer th:replace="/layout :: footer"></footer>
+Index: blog4/src/main/resources/templates/edit.html
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/blog4/src/main/resources/templates/edit.html b/blog4/src/main/resources/templates/edit.html
+--- a/blog4/src/main/resources/templates/edit.html	(revision c9c804ce9e6ff78e22031085db5caf6752baa3c6)
++++ b/blog4/src/main/resources/templates/edit.html	(date 1658398405872)
+@@ -4,8 +4,8 @@
+ <body>
+ <h3>Edit Product</h3>
+ <p>
+-    <a th:href="@{/product}">
+-        Back to product list
++    <a th:href="@{/blog}">
++        Back to blog list
+     </a>
+ </p>
+ <div id="form">
+@@ -14,25 +14,14 @@
+ <!--    private double price;-->
+ <!--    private String description;-->
+ <!--    private String manufacturing;-->
+-    <form action="#" th:action="@{/product/update}" th:object="${product}"
++    <form action="#" th:action="@{/blog/update}" th:object="${blog}"
+           method="POST" novalidate="novalidate">
+         <input type="hidden" th:field="*{id}"/>
+         <div>
+             <label>Name</label>
+             <input type="text" th:field="*{name}"/>
+         </div>
+-        <div>
+-            <label>Price</label>
+-            <input type="number" th:field="*{price}"/>
+-        </div>
+-        <div>
+-            <label>Description</label>
+-            <input type="text" th:field="*{description}"/>
+-        </div>
+-        <div>
+-            <label>Manufacturing</label>
+-            <input type="text" th:field="*{manufacturing}"/>
+-        </div>
++
+         <input type="submit" value="Edit"/>
+     </form>
+ </div>
+Index: blog4/src/main/java/com/example/service/BlogServiceImpl.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/blog4/src/main/java/com/example/service/BlogServiceImpl.java b/blog4/src/main/java/com/example/service/BlogServiceImpl.java
+--- a/blog4/src/main/java/com/example/service/BlogServiceImpl.java	(revision c9c804ce9e6ff78e22031085db5caf6752baa3c6)
++++ b/blog4/src/main/java/com/example/service/BlogServiceImpl.java	(date 1658412666954)
+@@ -7,6 +7,7 @@
+ import org.springframework.transaction.annotation.Transactional;
+ 
+ import java.util.List;
++import java.util.Optional;
+ 
+ @Service
+ public class BlogServiceImpl implements IBlogService {
+@@ -24,4 +25,27 @@
+         blogRepository.save(blog);
+     }
+ 
++/*    @Override
++    public void update(Blog blog) {
++        blogRepository.update( blog.getName(), blog.getId());
++    }*/
++
++    @Override
++    public Blog findById(int id) {
++        return blogRepository.findById(id);
++    }
++
++    @Override
++    public void delete(int id) {
++            blogRepository.delete(id);
++    }
++
++    @Override
++    public List<Blog> searchByName(String keyword) {
++        return blogRepository.searchByName(keyword);
++    }
++
++    public Blog getBlog(int id) {
++        return blogRepository.getBlog(id);
++    }
+ }
+Index: ss7_SpringDataRepository/SpringDataRepository/.idea/vcs.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/ss7_SpringDataRepository/SpringDataRepository/.idea/vcs.xml b/ss7_SpringDataRepository/SpringDataRepository/.idea/vcs.xml
+new file mode 100644
+--- /dev/null	(date 1658399171964)
++++ b/ss7_SpringDataRepository/SpringDataRepository/.idea/vcs.xml	(date 1658399171964)
+@@ -0,0 +1,6 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="VcsDirectoryMappings">
++    <mapping directory="$PROJECT_DIR$/../.." vcs="Git" />
++  </component>
++</project>
+\ No newline at end of file
+Index: blog3/src/main/java/com/example/controller/BlogController.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/blog3/src/main/java/com/example/controller/BlogController.java b/blog3/src/main/java/com/example/controller/BlogController.java
+--- a/blog3/src/main/java/com/example/controller/BlogController.java	(revision c9c804ce9e6ff78e22031085db5caf6752baa3c6)
++++ b/blog3/src/main/java/com/example/controller/BlogController.java	(date 1658391888459)
+@@ -42,24 +42,40 @@
+         return "redirect:/blog";
+     }
+ 
++    @GetMapping("/{id}/edit")
++    public String edit(@PathVariable int id, Model model) {
++        model.addAttribute("blog", blogService.findById(id));
++        return "/edit";
++    }
++
++    @PostMapping("/update")
++    public String update(Blog blog) {
++        blogService.update(blog.getId(), blog);
++        return "redirect:/product";
++    }
++
+     @GetMapping("/{id}/delete")
+     public String delete(@PathVariable int id, Model model) {
+-        model.addAttribute("blog", blogService.findById(id));
++        model.addAttribute("product", blogService.findById(id));
+         return "/delete";
+     }
+ 
+-//    @PostMapping("/delete")
+-//    public String delete(@ModelAttribute("song") Blog blog, RedirectAttributes redirect) {
+-//        blogService.delete(blog.getId());
+-//        redirect.addFlashAttribute("success", "Removed product successfully!");
+-//        return "redirect:/song";
+-//    }
++    @PostMapping("/delete")
++    public String delete(@ModelAttribute("blog") Blog blog, RedirectAttributes redirect) {
++        blogService.remove(blog.getId());
++        redirect.addFlashAttribute("success", "Removed product successfully!");
++        return "redirect:/product";
++    }
+ 
+-    @GetMapping("/search")
+-    public String search(@RequestParam("kq") String keyword,
+-                         Model model){
+-        List<Blog> blogList = blogService.findByName(keyword);
+-        model.addAttribute("blogList",blogList);
+-        return "blog";
++    @GetMapping("/{id}/view")
++    public String view(@PathVariable int id, Model model) {
++        model.addAttribute("product", blogService.findById(id));
++        return "/view";
++    }
++
++    @PostMapping("/search")
++    public String search(@RequestParam("name") String name, Model model) {
++        model.addAttribute("products",blogService.searchByName(name));
++        return "/index";
+     }
+ }
+Index: blog4/src/main/java/com/example/model/Category.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/blog4/src/main/java/com/example/model/Category.java b/blog4/src/main/java/com/example/model/Category.java
+new file mode 100644
+--- /dev/null	(date 1658411512328)
++++ b/blog4/src/main/java/com/example/model/Category.java	(date 1658411512328)
+@@ -0,0 +1,61 @@
++package com.example.model;
++
++import com.fasterxml.jackson.annotation.JsonBackReference;
++
++import javax.persistence.*;
++import java.util.Set;
++
++@Entity
++public class Category {
++
++    @Id
++    @GeneratedValue(strategy = GenerationType.IDENTITY)
++    private int id;
++
++    @Column(name = "category_name")
++    private String categoryName;
++
++    @JsonBackReference
++    @OneToMany(mappedBy = "category")
++    private Set<Blog> blogs;
++
++    public Category() {
++    }
++
++    public Category(int id, String name) {
++        this.id = id;
++        this.categoryName = name;
++    }
++
++    public int getId() {
++        return id;
++    }
++
++    public void setId(int id) {
++        this.id = id;
++    }
++
++    public String getCategoryName() {
++        return categoryName;
++    }
++
++    public void setCategoryName(String name) {
++        this.categoryName = name;
++    }
++
++    @Override
++    public String toString() {
++        return "Category{" +
++                "id=" + id +
++                ", name='" + categoryName + '\'' +
++                '}';
++    }
++
++    public Set<Blog> getBlogs() {
++        return blogs;
++    }
++
++    public void setBlogs(Set<Blog> blogs) {
++        this.blogs = blogs;
++    }
++}
+Index: ss7_SpringDataRepository/SpringDataRepository/.idea/misc.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/ss7_SpringDataRepository/SpringDataRepository/.idea/misc.xml b/ss7_SpringDataRepository/SpringDataRepository/.idea/misc.xml
+new file mode 100644
+--- /dev/null	(date 1658399171953)
++++ b/ss7_SpringDataRepository/SpringDataRepository/.idea/misc.xml	(date 1658399171953)
+@@ -0,0 +1,9 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="ProjectRootManager">
++    <output url="file://$PROJECT_DIR$/out" />
++  </component>
++  <component name="ProjectType">
++    <option name="id" value="jpab" />
++  </component>
++</project>
+\ No newline at end of file
+Index: ss7_SpringDataRepository/SpringDataRepository/.idea/runConfigurations.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/ss7_SpringDataRepository/SpringDataRepository/.idea/runConfigurations.xml b/ss7_SpringDataRepository/SpringDataRepository/.idea/runConfigurations.xml
+new file mode 100644
+--- /dev/null	(date 1658399171957)
++++ b/ss7_SpringDataRepository/SpringDataRepository/.idea/runConfigurations.xml	(date 1658399171957)
+@@ -0,0 +1,10 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="RunConfigurationProducerService">
++    <option name="ignoredProducers">
++      <set>
++        <option value="com.android.tools.idea.compose.preview.runconfiguration.ComposePreviewRunConfigurationProducer" />
++      </set>
++    </option>
++  </component>
++</project>
+\ No newline at end of file
+Index: ss7_SpringDataRepository/SpringDataRepository/.idea/SpringDataRepository.iml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/ss7_SpringDataRepository/SpringDataRepository/.idea/SpringDataRepository.iml b/ss7_SpringDataRepository/SpringDataRepository/.idea/SpringDataRepository.iml
+new file mode 100644
+--- /dev/null	(date 1658399171944)
++++ b/ss7_SpringDataRepository/SpringDataRepository/.idea/SpringDataRepository.iml	(date 1658399171944)
+@@ -0,0 +1,9 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<module type="JAVA_MODULE" version="4">
++  <component name="NewModuleRootManager" inherit-compiler-output="true">
++    <exclude-output />
++    <content url="file://$MODULE_DIR$" />
++    <orderEntry type="inheritedJdk" />
++    <orderEntry type="sourceFolder" forTests="false" />
++  </component>
++</module>
+\ No newline at end of file
+Index: ss7_SpringDataRepository/SpringDataRepository/.idea/modules.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/ss7_SpringDataRepository/SpringDataRepository/.idea/modules.xml b/ss7_SpringDataRepository/SpringDataRepository/.idea/modules.xml
+new file mode 100644
+--- /dev/null	(date 1658399171950)
++++ b/ss7_SpringDataRepository/SpringDataRepository/.idea/modules.xml	(date 1658399171950)
+@@ -0,0 +1,8 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="ProjectModuleManager">
++    <modules>
++      <module fileurl="file://$PROJECT_DIR$/.idea/SpringDataRepository.iml" filepath="$PROJECT_DIR$/.idea/SpringDataRepository.iml" />
++    </modules>
++  </component>
++</project>
+\ No newline at end of file
+Index: ss7_SpringDataRepository/SpringDataRepository/.idea/.gitignore
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/ss7_SpringDataRepository/SpringDataRepository/.idea/.gitignore b/ss7_SpringDataRepository/SpringDataRepository/.idea/.gitignore
+new file mode 100644
+--- /dev/null	(date 1658399164223)
++++ b/ss7_SpringDataRepository/SpringDataRepository/.idea/.gitignore	(date 1658399164223)
+@@ -0,0 +1,8 @@
++# Default ignored files
++/shelf/
++/workspace.xml
++# Datasource local storage ignored files
++/dataSources/
++/dataSources.local.xml
++# Editor-based HTTP Client requests
++/httpRequests/
+Index: blog4/src/main/java/com/example/controller/BlogController.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/blog4/src/main/java/com/example/controller/BlogController.java b/blog4/src/main/java/com/example/controller/BlogController.java
+--- a/blog4/src/main/java/com/example/controller/BlogController.java	(revision c9c804ce9e6ff78e22031085db5caf6752baa3c6)
++++ b/blog4/src/main/java/com/example/controller/BlogController.java	(date 1658412940936)
+@@ -2,16 +2,19 @@
+ 
+ import com.example.model.Blog;
+ import com.example.service.IBlogService;
++import com.example.service.ICategoryService;
+ import org.springframework.beans.factory.annotation.Autowired;
++import org.springframework.data.domain.Page;
++import org.springframework.data.domain.Pageable;
++import org.springframework.data.domain.Sort;
++import org.springframework.data.web.PageableDefault;
+ import org.springframework.stereotype.Controller;
+ import org.springframework.ui.Model;
+-import org.springframework.web.bind.annotation.GetMapping;
+-import org.springframework.web.bind.annotation.ModelAttribute;
+-import org.springframework.web.bind.annotation.PostMapping;
+-import org.springframework.web.bind.annotation.RequestMapping;
++import org.springframework.web.bind.annotation.*;
+ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+ 
+ import java.util.List;
++import java.util.Optional;
+ 
+ @Controller
+ @RequestMapping("/blog")
+@@ -20,8 +23,11 @@
+     @Autowired
+     IBlogService blogService;
+ 
++    @Autowired
++    ICategoryService categoryService;
++
+     @GetMapping("")
+-    public String showList(Model model){
++    public String showList(Model model, @PageableDefault (value = 5, sort = "id",direction = Sort.Direction.DESC) Pageable pageable, @RequestParam Optional<String> searchParam) {
+         List<Blog> blogList = blogService.findAll();
+         model.addAttribute("blogList", blogList);
+         return "index";
+@@ -30,6 +36,7 @@
+     @GetMapping("/create")
+     public String create(Model model){
+         model.addAttribute("blog", new Blog());
++        model.addAttribute("category",categoryService.getAllCategory());
+         return "/create";
+     }
+ 
+@@ -41,4 +48,41 @@
+                 "Create blog: " + blog.getName() + " OK!");
+         return "redirect:/blog";
+     }
++
++    @GetMapping("/{id}/edit")
++    public String edit(@PathVariable int id, Model model) {
++        model.addAttribute("blog", blogService.findById(id));
++        return "/edit";
++    }
++
++    @PostMapping("/update")
++    public String update(Blog blog) {
++        blogService.save(blog);
++        return "redirect:/blog";
++    }
++
++    @GetMapping("/{id}/delete")
++    public String delete(@PathVariable int id, Model model) {
++        model.addAttribute("blog", blogService.findById(id));
++        return "/delete";
++    }
++
++    @PostMapping("/delete")
++    public String delete(@ModelAttribute("blog") Blog blog, RedirectAttributes redirect) {
++        blogService.delete(blog.getId());
++        redirect.addFlashAttribute("success", "Removed blog successfully!");
++        return "redirect:/blog";
++    }
++
++    @GetMapping("/{id}/view")
++    public String view(@PathVariable int id, Model model) {
++        model.addAttribute("blog", blogService.findById(id));
++        return "/view";
++    }
++
++    @PostMapping("/search")
++    public String search(@RequestParam("name") String name, Model model) {
++        model.addAttribute("blog",blogService.searchByName(name));
++        return "/index";
++    }
+ }

@@ -1,9 +1,7 @@
 package com.example.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 public class Blog {
@@ -15,6 +13,13 @@ public class Blog {
 
     public Blog() {
     }
+
+    @ManyToOne
+    @JoinColumn(name = "category_id", referencedColumnName = "id")
+    private Category category;
+
+//    @OneToMany(mappedBy = "blog")
+//    private Set<Category> category;
 
     public Blog(int id, String name) {
         this.id = id;
@@ -43,5 +48,13 @@ public class Blog {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 '}';
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
     }
 }

@@ -42,24 +42,40 @@ public class BlogController {
         return "redirect:/blog";
     }
 
+    @GetMapping("/{id}/edit")
+    public String edit(@PathVariable int id, Model model) {
+        model.addAttribute("blog", blogService.findById(id));
+        return "/edit";
+    }
+
+    @PostMapping("/update")
+    public String update(Blog blog) {
+        blogService.update(blog.getId(), blog);
+        return "redirect:/product";
+    }
+
     @GetMapping("/{id}/delete")
     public String delete(@PathVariable int id, Model model) {
-        model.addAttribute("blog", blogService.findById(id));
+        model.addAttribute("product", blogService.findById(id));
         return "/delete";
     }
 
-//    @PostMapping("/delete")
-//    public String delete(@ModelAttribute("song") Blog blog, RedirectAttributes redirect) {
-//        blogService.delete(blog.getId());
-//        redirect.addFlashAttribute("success", "Removed product successfully!");
-//        return "redirect:/song";
-//    }
+    @PostMapping("/delete")
+    public String delete(@ModelAttribute("blog") Blog blog, RedirectAttributes redirect) {
+        blogService.remove(blog.getId());
+        redirect.addFlashAttribute("success", "Removed product successfully!");
+        return "redirect:/product";
+    }
 
-    @GetMapping("/search")
-    public String search(@RequestParam("kq") String keyword,
-                         Model model){
-        List<Blog> blogList = blogService.findByName(keyword);
-        model.addAttribute("blogList",blogList);
-        return "blog";
+    @GetMapping("/{id}/view")
+    public String view(@PathVariable int id, Model model) {
+        model.addAttribute("product", blogService.findById(id));
+        return "/view";
+    }
+
+    @PostMapping("/search")
+    public String search(@RequestParam("name") String name, Model model) {
+        model.addAttribute("products",blogService.searchByName(name));
+        return "/index";
     }
 }

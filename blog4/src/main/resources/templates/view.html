@@ -4,30 +4,18 @@
 <body>
 <h3>View Product</h3>
 <p>
-    <a th:href="@{/product}">
+    <a th:href="@{/blog}">
         Back to product list
     </a>
 </p>
 <div id="detail">
     <div class="cusdetail">
         <label>ID:</label>
-        <label th:text="${product.id}"></label>
+        <label th:text="${blog.id}"></label>
     </div>
     <div class="cusdetail">
         <label>Name:</label>
-        <label th:text="${product.name}"></label>
-    </div>
-    <div class="cusdetail">
-        <label>Price:</label>
-        <label th:text="${product.price}"></label>
-    </div>
-    <div class="cusdetail">
-        <label>Email:</label>
-        <label th:text="${product.description}"></label>
-    </div>
-    <div class="cusdetail">
-        <label>Address:</label>
-        <label th:text="${product.manufacturing}"></label>
+        <label th:text="${blog.name}"></label>
     </div>
 </div>
 <footer th:replace="/layout :: footer"></footer>

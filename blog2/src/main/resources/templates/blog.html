@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form action="/blog/search">
+    <input type="text" name="kq">
+</form>
+<a th:href="@{/create}">
+    Add new blog
+</a>
+<div th:replace="~{/layout::common}" class="divOut"></div>
+<strong style="color: green" th:text="${message}"></strong> <!--text -->
+<p th:if="${blogList.isEmpty()}" style="color:red">List Empty</p>
+
+<table class="table" border="1" th:unless="${blogList.isEmpty()}">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Edit</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="blog : ${blogList}">
+        <td th:text="${blog.id}"></td>
+        <td th:text="${blog.name}"></td>
+        <td>
+            <a th:href="@{/blog/edit/{id}(id = ${blog.id})}">Edit</a> <!--value-->
+        </td>
+    </tr>
+    </tbody>
+</table>
+<div th:replace="~{/layout::abc}" class="divOut"></div>
+</body>
+</html>

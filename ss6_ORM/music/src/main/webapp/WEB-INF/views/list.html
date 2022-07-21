@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div th:replace="~{/layout::common}" class="divOut"></div>
+<strong style="color: green" th:text="${message}"></strong>
+<p th:if="${songList.isEmpty()}" style="color:red">List Empty</p>
+
+<table class="table" border="1" th:unless="${songList.isEmpty()}">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Artist</th>
+        <th>Style</th>
+        <th>URL</th>
+        <th>Edit</th>
+        <th>Delete</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="song : ${songList}">
+        <td th:text="${song.id}"></td>
+        <td th:text="${song.name}"></td>
+        <td th:text="${song.artist}"></td>
+        <td th:text="${song.style}"></td>
+        <td th:text="${song.url}"></td>
+        <td><a th:href="@{/song/edit/{id}(id = ${student.id})}">Edit</a></td>
+        <td><a th:href="@{/song/delete/{id}(id = ${student.id})}">Delete</a></td>
+    </tr>
+    </tbody>
+</table>
+
+<div th:replace="~{/layout::abc}" class="divOut"></div>
+
+<div th:with="name='Hoang', age='18'">
+    <h3 th:text="${name}"></h3>
+</div>
+</body>
+</html>
