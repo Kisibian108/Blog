@@ -22,7 +22,7 @@ public class BlogServiceImpl implements IBlogService {
 
     @Override
     public void save(Blog blog) {
-            blogRepository.save(blog);
+        blogRepository.save(blog);
     }
 
 //    @Override
@@ -40,4 +40,8 @@ public class BlogServiceImpl implements IBlogService {
         return null;
     }
 
+    @Override
+    public List<Blog> findByName(String keyword) {
+        return blogRepository.searchByName(keyword);
+    }
 }

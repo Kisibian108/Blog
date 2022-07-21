@@ -1,7 +1,6 @@
 package com.example.service;
 
 import com.example.model.Blog;
-import com.example.model.Blog;
 
 import java.util.List;
 
@@ -16,4 +15,5 @@ public interface IBlogService {
 
     Blog getBlog(int id);
 
+    List<Blog> findByName(String keyword);
 }
