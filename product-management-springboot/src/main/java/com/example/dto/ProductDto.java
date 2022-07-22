@@ -12,6 +12,7 @@ public class ProductDto {
     private String name;
 
     @NotNull
+    @Min(50)
     private double price;
 
     @NotBlank
