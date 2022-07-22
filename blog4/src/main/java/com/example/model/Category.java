@@ -15,7 +15,6 @@ public class Category {
     @Column(name = "category_name")
     private String categoryName;
 
-    @JsonBackReference
     @OneToMany(mappedBy = "category")
     private Set<Blog> blogs;
 

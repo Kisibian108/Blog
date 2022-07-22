@@ -26,22 +26,10 @@ public interface IBlogRepository extends JpaRepository<Blog,Integer> {
             countQuery = " select count(*) from (select * from blog where title like :searchValue ) temp_table ")
     Page<Blog> getAllBlog(@Param("searchValue") String searchValue , Pageable pageable);
 
-    @Modifying
-    @Transactional
-    @Query(value = " delete from blog b " +
-            " where b.id = :id ", nativeQuery = true)
-    void delete(@Param("id") int id);
-
-    @Query(value = " select * " +
-            " from blog b where b.id = :id", nativeQuery = true)
-    Blog findById(@Param("id") int id);
+    Page<Blog> findAll(Pageable pageable);
 
     @Query(value = " select * " +
             " from blog b where b.id = :id", nativeQuery = true)
     Blog getBlog(@Param("id") int id);
-
-//    @Modifying
-//    @Query(value = "update blog set name = :name where id = :id", nativeQuery = true)
-//    void update( @Param("name") String name, @Param("id") Integer id);
 
 }

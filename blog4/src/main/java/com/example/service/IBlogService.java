@@ -9,11 +9,11 @@ import java.util.Optional;
 
 public interface IBlogService {
 
-    List<Blog> findAll();
+    Page<Blog> findAll(Pageable pageable);
 
     void save(Blog blog);
 
-    Blog findById(int id);
+    Optional<Blog> findById(int id);
 
     void delete(int id);
 
