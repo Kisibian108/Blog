@@ -9,24 +9,31 @@
     </a>
 </p>
 <div id="form">
-    <form th:action="@{/product/save}" th:object="${product}"
+    <form th:action="@{/product/save}" th:object="${productDto}"
           method="POST" novalidate="novalidate">
         <input type="hidden" th:field="*{id}"/>
         <div>
             <label>Name</label>
             <input type="text" th:field="*{name}"/>
+            <p style="color: red" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></p>
+
         </div>
         <div>
             <label>Price</label>
-            <input type="number" th:field="*{price}"/>
+            <input type="text" th:field="*{price}"/>
+            <p style="color: red" th:if="${#fields.hasErrors('price')}" th:errors="*{price}"></p>
+
         </div>
         <div>
             <label>Description</label>
             <input type="text" th:field="*{description}"/>
+            <p style="color: red" th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></p>
         </div>
         <div>
             <label>Manufacturing</label>
             <input type="text" th:field="*{manufacturing}"/>
+            <p style="color: red" th:if="${#fields.hasErrors('manufacturing')}" th:errors="*{manufacturing}"></p>
+
         </div>
         <input type="submit" value="Save"/>
     </form>

@@ -1,10 +1,14 @@
 package com.example.controller;
 
+import com.example.dto.ProductDto;
 import com.example.model.Product;
 import com.example.service.IProductService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -26,15 +30,22 @@ public class ProductController {
 
     @GetMapping("/create")
     public String create(Model model) {
-        model.addAttribute("product", new Product());
+        model.addAttribute("productDto", new ProductDto());
         return "/create";
     }
 
     @PostMapping("/save")
-    public String save(Product product) {
-        product.setId((int) (Math.random() * 10000));
-        productService.save(product);
-        return "redirect:/product";
+    public String save(@Validated @ModelAttribute ProductDto productDto, BindingResult bindingResult) {
+
+        if(bindingResult.hasFieldErrors()){
+            return "create";
+        }else {
+            productDto.setId((int) (Math.random() * 10000));
+            Product product = new Product();
+            BeanUtils.copyProperties(productDto,product);
+            productService.save(product);
+            return "redirect:/product";
+        }
     }
 
     @GetMapping("/{id}/edit")
