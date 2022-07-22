@@ -20,7 +20,7 @@ public class SongDto {
 
     @NotBlank
     @Size(max = 1000)
-    @Pattern(regexp = "/^[a-zA-Z0-9,]+$/")
+    @Pattern(regexp = "^(?![0-9.,])(?!.*[0-9.,]$)(?!.*\\d,)(?!.*,\\d)[a-zA-Z0-9,]+$")
     private String style;
     private String url;
 
