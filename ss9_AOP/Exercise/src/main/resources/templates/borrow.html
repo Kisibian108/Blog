@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="common :: css">
+
+</head>
+<body id="page-top">
+<div th:replace="common :: nav-bar"></div>
+<!-- Contact-->
+<section class="page-section" id="home">
+  <div class="row gx-4 gx-lg-5 justify-content-center">
+    <div class="col-lg-8 col-xl-6 text-center">
+      <h2 class="mt-0">Library Management</h2>
+      <hr class="divider"/>
+    </div>
+  </div>
+  <div class="container mt-3">
+    <table class="table table-hover">
+      <thead>
+      <tr style="background-color: #f4623a" class="text-light">
+        <th>ID</th>
+        <th>Name</th>
+        <th>Code</th>
+        <th>Status</th>
+        <th>Borrow</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="item,loop : ${detailBooks}">
+        <td th:text="${item.id}"></td>
+        <td th:text="${item.book.name}"></td>
+        <td th:text="${item.bookCode}"></td>
+        <td th:if="${item.status == true}">
+          <span>Used</span>
+        </td>
+        <td th:if="${item.status == false}">
+          <span>Ready</span>
+        </td>
+        <td>
+          <!-- Button trigger modal -->
+          <span th:if="${item.status == true}">
+                    <button type="button" class="btn btn-outline-secondary disabled text-decoration-line-through">
+                        Borrow
+                    </button>
+                </span>
+          <span th:if="${item.status == false}">
+                    <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"
+                            th:data-bs-target="'#staticBackdrop' + ${item.id}">
+                        Borrow
+                    </button>
+                </span>
+
+          <!-- Modal -->
+          <div class="modal fade" th:id="staticBackdrop + ${item.id}" data-bs-backdrop="static"
+               data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
+               aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="staticBackdropLabel">Borrow Book</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal"
+                          aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  Do you want borrow book <span th:text="${item.book.name}"></span> with code = <span
+                        th:text="${item.bookCode}"></span> ?
+                </div>
+                <div class="modal-footer">
+                  <a th:href="@{/borrow(id=${item.id})}" class="btn btn-outline-success">Access</a>
+                  <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                    Close
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+    <div class="container-fluid mt-3">
+      <ul class="pagination">
+        <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+        <li class="page-item"><a class="page-link" href="#">1</a></li>
+        <li class="page-item active"><a class="page-link" href="#">2</a></li>
+        <li class="page-item"><a class="page-link" href="#">3</a></li>
+        <li class="page-item"><a class="page-link" href="#">Next</a></li>
+      </ul>
+    </div>
+  </div>
+</section>
+<!-- Footer-->
+<footer class="bg-light py-5" id="footer">
+  <div class="container">
+    <ul class="nav justify-content-center border-bottom pb-3 mb-3">
+      <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Home</a></li>
+      <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Features</a></li>
+      <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Pricing</a></li>
+      <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">FAQs</a></li>
+      <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">About</a></li>
+    </ul>
+    <p class="text-center text-muted">&copy; 2022 Company, Inc</p>
+  </div>
+</footer>
+<div th:replace="common :: js"></div>
+</body>
+</html>

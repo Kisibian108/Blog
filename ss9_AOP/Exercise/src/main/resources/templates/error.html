@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="common :: css">
+
+</head>
+<body id="page-top">
+<!-- Contact-->
+<section class="page-section" id="home">
+    <div class="row gx-4 gx-lg-5 justify-content-center">
+        <div class="col-lg-8 col-xl-6 text-center">
+            <h2 class="mt-0">Error</h2>
+            <hr class="divider"/>
+            <a class="btn btn-primary" th:href="@{/}">Back to Home</a>
+        </div>
+    </div>
+    <div class="container mt-3">
+        <img th:src="@{https://i.pinimg.com/originals/5b/d2/f8/5bd2f8db902b388efb2b6abcaabc85a2.jpg}" class="img-fluid" alt="...">
+    </div>
+</section>
+<!-- Footer-->
+<footer class="bg-light py-5" id="footer">
+    <div class="container">
+        <ul class="nav justify-content-center border-bottom pb-3 mb-3">
+            <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Home</a></li>
+            <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Features</a></li>
+            <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Pricing</a></li>
+            <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">FAQs</a></li>
+            <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">About</a></li>
+        </ul>
+        <p class="text-center text-muted">&copy; 2022 Company, Inc</p>
+    </div>
+</footer>
+<div th:replace="common :: js"></div>
+</body>
+</html>

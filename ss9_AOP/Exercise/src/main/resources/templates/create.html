@@ -1,0 +1,66 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="common :: css">
+</head>
+<body id="page-top">
+<!-- Navigation-->
+<div th:replace="common :: nav-bar"></div>
+<!-- Contact-->
+<section class="page-section" id="employee">
+  <div class="container px-4 px-lg-5">
+    <div class="row gx-4 gx-lg-5 justify-content-center">
+      <div class="col-lg-8 col-xl-6 text-center">
+        <h2 class="mt-0">Create Book!</h2>
+        <hr class="divider"/>
+      </div>
+    </div>
+    <div class="row gx-4 gx-lg-5 justify-content-center mb-5">
+      <div class="col-lg-6">
+        <form id="contactForm" action="/create" method="post" th:object="${book}">
+          <!-- Name input-->
+          <div class="form-floating mb-3">
+            <input class="form-control" id="name" type="text" placeholder="Enter your name..."
+                   data-sb-validations="required" th:field="*{name}"/>
+            <label for="name">Name</label>
+            <div class="invalid-feedback" data-sb-feedback="name:required">A name is required.</div>
+          </div>
+          <!-- Author input-->
+          <div class="form-floating mb-3">
+            <input class="form-control" id="author" type="text" placeholder="Enter your author..."
+                   data-sb-validations="required" th:field="*{author}"/>
+            <label for="author">Author</label>
+            <div class="invalid-feedback" data-sb-feedback="author:required">A author is required.</div>
+          </div>
+          <!-- Quantity input-->
+          <div class="form-floating mb-3">
+            <input class="form-control" id="quantity" type="text" placeholder="Enter your quantity..."
+                   data-sb-validations="required" th:field="*{quantity}"/>
+            <label for="quantity">Quantity</label>
+            <div class="invalid-feedback" data-sb-feedback="quantity:required">A quantity is required.</div>
+          </div>
+          <!-- Submit Button-->
+          <div class="d-grid">
+            <button class="btn btn-primary btn-xl " id="submitButton" type="submit">Submit</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- Footer-->
+<footer class="bg-light py-5">
+  <div class="container">
+    <ul class="nav justify-content-center border-bottom pb-3 mb-3">
+      <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Home</a></li>
+      <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Features</a></li>
+      <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Pricing</a></li>
+      <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">FAQs</a></li>
+      <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">About</a></li>
+    </ul>
+    <p class="text-center text-muted">&copy; 2022 Company, Inc</p>
+  </div>
+</footer>
+<div th:replace="common :: js"></div>
+</body>
+</html>
