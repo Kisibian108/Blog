@@ -18,13 +18,13 @@ public class BlogServiceImpl implements IBlogService {
     IBlogRepository blogRepository;
 
     @Override
-    public Page<Blog> findAll(Pageable pageable) {
-        return blogRepository.findAll(pageable);
+    public List<Blog> findAll() {
+        return blogRepository.findAll();
     }
 
     @Override
-    public void save(Blog blog) {
-        blogRepository.save(blog);
+    public Blog save(Blog blog) {
+       return blogRepository.save(blog);
     }
 
 /*    @Override

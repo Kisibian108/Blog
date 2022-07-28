@@ -22,4 +22,9 @@ public class CategoryImpl implements ICategoryService {
     public Category findById(int id) {
         return categoryRepository.findById(id).orElse(null);
     }
+
+    @Override
+    public void delete(int id) {
+        categoryRepository.deleteById(id);
+    }
 }

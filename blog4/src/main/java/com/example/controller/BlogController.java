@@ -1,21 +1,23 @@
 package com.example.controller;
 
 import com.example.model.Blog;
+import com.example.model.Category;
 import com.example.service.IBlogService;
 import com.example.service.ICategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
-import org.springframework.stereotype.Controller;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
-@Controller
+//@Controller
+@RestController
+@CrossOrigin
 @RequestMapping("/blog")
 public class BlogController {
 
@@ -25,11 +27,71 @@ public class BlogController {
     @Autowired
     ICategoryService categoryService;
 
-    @GetMapping("")
-    public String showList(Model model, @PageableDefault (value = 5, sort = "id",direction = Sort.Direction.ASC) Pageable pageable, @RequestParam Optional<String> searchParam) {
-        Page<Blog> blogList = blogService.findAll(pageable);
-        model.addAttribute("blogList", blogList);
-        return "index";
+//    @GetMapping("")
+//    public String showList(Model model, @PageableDefault (value = 5, sort = "id",direction = Sort.Direction.ASC) Pageable pageable, @RequestParam Optional<String> searchParam) {
+//        Page<Blog> blogList = blogService.findAll(pageable);
+//        model.addAttribute("blogList", blogList);
+//        return "index";
+//    }
+
+    @GetMapping
+    public ResponseEntity<Iterable<Blog>> findAllBlog(){
+        List<Blog> blogList = (List<Blog>) blogService.findAll();
+        if(blogList.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(blogList, HttpStatus.OK);
+    }
+
+    @GetMapping("/category")
+    public ResponseEntity<Iterable<Category>> findAllCategory(){
+        Set<Category> categories = (Set<Category>) categoryService.getAllCategory();
+        if(categories.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(categories, HttpStatus.OK);
+    }
+
+    //get by Id
+    @GetMapping("/{id}")
+    public ResponseEntity<Blog> findBlogById(@PathVariable int id) {
+        Optional<Blog> blog = blogService.findById(id);
+        if (!blog.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(blog.get(), HttpStatus.OK);
+    }
+
+    //create
+    @PostMapping
+    public ResponseEntity<Blog> saveBlog(@RequestBody Blog blog) {
+        return new ResponseEntity<>(blogService.save(blog), HttpStatus.CREATED);
+    }
+
+    //update
+    @PutMapping("/{id}")
+    public ResponseEntity<Blog> updateBlog(@PathVariable int id, @RequestBody Blog blog){
+
+        Optional<Blog> currentBlog = blogService.findById(id);
+                if(currentBlog == null){
+                    return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+                }
+                currentBlog.get().setName(blog.getName());
+                blogService.save(currentBlog.get());
+                return new ResponseEntity<>(currentBlog.get(), HttpStatus.OK);
+    }
+
+    //delete
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Blog> deleteBlog(@PathVariable int id) {
+        Optional<Blog> blog = blogService.findById(id);
+        Category category = categoryService.findById(id);
+        if (!blog.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        categoryService.delete(id);
+        blogService.delete(id);
+        return new ResponseEntity<>(blog.get(), HttpStatus.NO_CONTENT);
     }
 
     @GetMapping("/create")

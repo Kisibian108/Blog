@@ -9,4 +9,6 @@ public interface ICategoryService {
     Set<Category> getAllCategory();
 
     Category findById(int id);
+
+    void delete(int id);
 }
