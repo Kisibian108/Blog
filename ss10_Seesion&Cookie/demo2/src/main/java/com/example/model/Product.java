@@ -1,7 +1,6 @@
 package com.example.model;
 
 import javax.persistence.*;
-import java.util.Objects;
 
 @Entity
 public class Product {
@@ -11,7 +10,7 @@ public class Product {
     private int id;
     private String name;
     private String image;
-    @Column(columnDefinition = "LONGBLOG")
+    @Column(columnDefinition = "LONGBLOB")
     private String description;
     private long price;
     private short discount;

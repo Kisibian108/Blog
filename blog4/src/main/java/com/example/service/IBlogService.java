@@ -19,6 +19,8 @@ public interface IBlogService {
 
     List<Blog> searchByName(String keyword);
 
+    List<Blog> searchByAuthor(String name);
+
     Blog getBlog(int id);
 
 }

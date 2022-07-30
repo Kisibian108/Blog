@@ -30,4 +30,8 @@ public interface IBlogRepository extends JpaRepository<Blog,Integer> {
             " from blog b where b.id = :id", nativeQuery = true)
     Blog getBlog(@Param("id") int id);
 
+    List<Blog> findBlogsByNameContains(String keyword);
+
+    List<Blog> findBlogsByAuthorContains(String name);
+
 }

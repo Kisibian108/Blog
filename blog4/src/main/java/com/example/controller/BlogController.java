@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
@@ -18,7 +19,7 @@ import java.util.Set;
 //@Controller
 @RestController
 @CrossOrigin
-@RequestMapping("/blog")
+@RequestMapping(value = "/blog")
 public class BlogController {
 
     @Autowired
@@ -27,6 +28,7 @@ public class BlogController {
     @Autowired
     ICategoryService categoryService;
 
+    //return Page
 //    @GetMapping("")
 //    public String showList(Model model, @PageableDefault (value = 5, sort = "id",direction = Sort.Direction.ASC) Pageable pageable, @RequestParam Optional<String> searchParam) {
 //        Page<Blog> blogList = blogService.findAll(pageable);
@@ -34,9 +36,17 @@ public class BlogController {
 //        return "index";
 //    }
 
+    @GetMapping("/list")
+    public ModelAndView getAllBlogPage() {
+        ModelAndView modelAndView = new ModelAndView("/index");
+        modelAndView.addObject("blogList", blogService.findAll());
+        modelAndView.addObject("category", categoryService.getAllCategory());
+        return modelAndView;
+    }
+
     @GetMapping
     public ResponseEntity<Iterable<Blog>> findAllBlog(){
-        List<Blog> blogList = (List<Blog>) blogService.findAll();
+        List<Blog> blogList =  blogService.findAll();
         if(blogList.isEmpty()){
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
@@ -50,6 +60,26 @@ public class BlogController {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(categories, HttpStatus.OK);
+    }
+
+    //searchbyName
+    @GetMapping("/search")
+    public ResponseEntity<Iterable<Blog>> searchAllBlog(@RequestParam String keyword){
+        List<Blog> blogList =  blogService.searchByName(keyword);
+        if(blogList.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(blogList, HttpStatus.OK);
+    }
+
+    //searchbyName
+    @GetMapping("/searchA")
+    public ResponseEntity<Iterable<Blog>> searchAllBlogbyAuthor(@RequestParam String name){
+        List<Blog> blogList =  blogService.searchByAuthor(name);
+        if(blogList.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(blogList, HttpStatus.OK);
     }
 
     //get by Id

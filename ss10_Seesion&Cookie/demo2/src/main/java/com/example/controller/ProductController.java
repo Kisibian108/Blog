@@ -32,7 +32,6 @@ public class ProductController {
     public ModelAndView showListPage(Model model, @CookieValue(value = "idProduct", defaultValue = "-1") Long idProduct) {
         if (idProduct != -1) {
             model.addAttribute("historyProduct", productService.findById(idProduct).get());
-
         }
         return new ModelAndView("product/list", "productList", productService.findAll());
     }
@@ -40,11 +39,10 @@ public class ProductController {
     @GetMapping("/detail/{id}")
     public ModelAndView showDetail(@PathVariable long id, HttpServletResponse response) {
         Cookie cookie = new Cookie("idProduct", id + "");
-        cookie.setMaxAge(1 * 24 * 60 * 60);
+        cookie.setMaxAge(1 * 10);
         response.addCookie(cookie);
 
         return new ModelAndView("product/detail", "product", productService.findById(id).get());
-
     }
 
     @GetMapping("/add/{id}")

@@ -44,7 +44,12 @@ public class BlogServiceImpl implements IBlogService {
 
     @Override
     public List<Blog> searchByName(String keyword) {
-        return blogRepository.searchByName(keyword);
+        return blogRepository.findBlogsByNameContains(keyword);
+    }
+
+    @Override
+    public List<Blog> searchByAuthor(String name) {
+        return blogRepository.findBlogsByAuthorContains(name);
     }
 
     public Blog getBlog(int id) {

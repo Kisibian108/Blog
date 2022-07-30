@@ -1,16 +1,17 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" >
+<html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="/layout :: head">
+
 </head>
 <body>
 <h3>Products</h3>
 <div>
-<label>Search</label>
-<form th:action="@{/blog/search}"
-      method="post" novalidate="novalidate">
-    <input type="text" name="name"/>
-    <input type="submit" value="search">
-</form>
+    <label>Search</label>
+    <form th:action="@{/blog/search}"
+          method="post" novalidate="novalidate">
+        <input type="text" name="name"/>
+        <input type="submit" value="search">
+    </form>
 </div>
 <p>
     <a th:href="@{/blog/create}">
@@ -18,33 +19,91 @@
     </a>
 </p>
 <div>
-<table id="product">
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>Name</th>
-        <th>Edit</th>
-        <th>View</th>
-        <th>Delete</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="row : ${blogList}">
-        <!--        <td th:text="${rowStat.count}"></td>-->
-        <td th:text="${row.getId()}"></td>
-        <td th:text="${row.getName()}"></td>
-        <td><a th:href="@{/blog/{id}/edit(id=${row.getId()})}">edit</a></td>
-        <td><a th:href="@{/blog/{id}/delete(id=${row.getId()})}">delete</a></td>
-        <td><a th:href="@{/blog/{id}/view(id=${row.getId()})}">view</a></td>
-    </tr>
-    </tbody>
-</table>
-    <div>
-        <a th:href="@{'/blog'(page=${blogList.number - 1})}" th:if="${blogList.hasPrevious()}">Previous</a>
-        <span th:text="${blogList.number + 1}"></span>/<span th:text="${blogList.totalPages}"></span>
-        <a th:href="@{'/blog'(page=${blogList.number + 1})}" th:if="${blogList.hasNext()}">Next</a>
-    </div>
+    <label>SearchByName</label>
+    <input type="text" id="keyword" name="keyword">
+    <label>SearchByAuthor</label>
+    <input type="text" id="name" name="name">
+    <table id="product">
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Author</th>
+        </tr>
+    </table>
 </div>
+<script src="https://code.jquery.com/jquery-latest.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $.ajax({
+            url: "http://localhost:8080/blog",
+            type: "GET",
+            dataType: "json",
+            success: function (data) {
+                console.log(data);
+                let tr = [];
+                for (let i = 0; i < data.length; i++) {
+                    tr.push("<tr>");
+                    tr.push("<td>" + data[i].id + "</td>");
+                    tr.push("<td>" + data[i].name + "</td>");
+                    tr.push("<td>" + data[i].description + "</td>");
+                    tr.push("<td>" + data[i].author + "</td>");
+                    tr.push("</tr>");
+                }
+                $("table").append((tr.join("")))
+            }
+        })
+        $("#keyword").keyup(function (){
+            let value = $(this).val();
+            console.log(value)
+
+            $("table").empty();
+            $.ajax({
+                url: "http://localhost:8080/blog/search?keyword="+value,
+                type: "GET",
+                dataType: "json",
+                success: function (data) {
+                    console.log(data);
+                    let tr = [];
+                    for (let i = 0; i < data.length; i++) {
+                        tr.push("<tr>");
+                        tr.push("<td>" + data[i].id + "</td>");
+                        tr.push("<td>" + data[i].name + "</td>");
+                        tr.push("<td>" + data[i].description + "</td>");
+                        tr.push("<td>" + data[i].author + "</td>");
+                        tr.push("</tr>");
+                    }
+                    $("table").append((tr.join("")))
+                }
+            })
+        })
+
+        $("#name").keyup(function (){
+            let value = $(this).val();
+            console.log(value)
+
+            $("table").empty();
+            $.ajax({
+                url: "http://localhost:8080/blog/searchA?name="+value,
+                type: "GET",
+                dataType: "json",
+                success: function (data) {
+                    console.log(data);
+                    let tr = [];
+                    for (let i = 0; i < data.length; i++) {
+                        tr.push("<tr>");
+                        tr.push("<td>" + data[i].id + "</td>");
+                        tr.push("<td>" + data[i].name + "</td>");
+                        tr.push("<td>" + data[i].description + "</td>");
+                        tr.push("<td>" + data[i].author + "</td>");
+                        tr.push("</tr>");
+                    }
+                    $("table").append((tr.join("")))
+                }
+            })
+        })
+    })
+</script>
 <footer th:replace="/layout :: footer"></footer>
 </body>
 </html>
