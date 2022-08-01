@@ -18,13 +18,13 @@ public class BlogServiceImpl implements IBlogService {
     IBlogRepository blogRepository;
 
     @Override
-    public List<Blog> findAll() {
-        return blogRepository.findAll();
+    public Page<Blog> getAllBlog(Pageable pageable, String keyword) {
+        return blogRepository.getAllBlog("%" + keyword + "%", pageable);
     }
 
     @Override
     public Blog save(Blog blog) {
-       return blogRepository.save(blog);
+        return blogRepository.save(blog);
     }
 
 /*    @Override
@@ -39,7 +39,7 @@ public class BlogServiceImpl implements IBlogService {
 
     @Override
     public void delete(int id) {
-            blogRepository.deleteById(id);
+        blogRepository.deleteById(id);
     }
 
     @Override

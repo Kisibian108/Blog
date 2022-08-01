@@ -20,9 +20,9 @@ public interface IBlogRepository extends JpaRepository<Blog,Integer> {
     @Query(value = "select * from blog where name = :keyword", nativeQuery = true)
     List<Blog> searchByName(@Param("keyword") String name);
 
-    @Query(value = " select * from blog where title like :searchValue ", nativeQuery = true,
-            countQuery = " select count(*) from (select * from blog where title like :searchValue ) temp_table ")
-    Page<Blog> getAllBlog(@Param("searchValue") String searchValue , Pageable pageable);
+    @Query(value = " select * from blog where name like :keyword ", nativeQuery = true,
+            countQuery = " select count(*) from (select * from blog where name like :keyword ) temp_table ")
+    Page<Blog> getAllBlog(@Param("keyword") String keyword , Pageable pageable);
 
 //    Page<Blog> findAll(Pageable pageable);
 
@@ -33,5 +33,6 @@ public interface IBlogRepository extends JpaRepository<Blog,Integer> {
     List<Blog> findBlogsByNameContains(String keyword);
 
     List<Blog> findBlogsByAuthorContains(String name);
+
 
 }

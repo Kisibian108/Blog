@@ -9,7 +9,7 @@ import java.util.Optional;
 
 public interface IBlogService {
 
-    List<Blog> findAll();
+    Page<Blog> getAllBlog(Pageable pageable, String keyword);
 
     Blog save(Blog blog);
 

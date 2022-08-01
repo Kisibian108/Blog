@@ -5,21 +5,27 @@ import com.example.model.Category;
 import com.example.service.IBlogService;
 import com.example.service.ICategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-//@Controller
-@RestController
+@Controller
+//@RestController
 @CrossOrigin
-@RequestMapping(value = "/blog")
+@RequestMapping("")
 public class BlogController {
 
     @Autowired
@@ -29,29 +35,30 @@ public class BlogController {
     ICategoryService categoryService;
 
     //return Page
-//    @GetMapping("")
-//    public String showList(Model model, @PageableDefault (value = 5, sort = "id",direction = Sort.Direction.ASC) Pageable pageable, @RequestParam Optional<String> searchParam) {
-//        Page<Blog> blogList = blogService.findAll(pageable);
-//        model.addAttribute("blogList", blogList);
-//        return "index";
+    @GetMapping("")
+    public String showList(Model model, @PageableDefault(value = 5, sort = "id",direction = Sort.Direction.ASC) Pageable pageable, @RequestParam Optional<String> search) {
+        String keyword = search.orElse("");
+        Page<Blog> blogList = blogService.getAllBlog(pageable ,keyword);
+        model.addAttribute("blogList", blogList);
+        return "index";
+    }
+
+//    @GetMapping("/list")
+//    public ModelAndView getAllBlogPage(Pageable pageable) {
+//        ModelAndView modelAndView = new ModelAndView("index1");
+//        modelAndView.addObject("blogList", blogService.getAllBlog());
+//        modelAndView.addObject("category", categoryService.getAllCategory());
+//        return modelAndView;
 //    }
 
-    @GetMapping("/list")
-    public ModelAndView getAllBlogPage() {
-        ModelAndView modelAndView = new ModelAndView("/index");
-        modelAndView.addObject("blogList", blogService.findAll());
-        modelAndView.addObject("category", categoryService.getAllCategory());
-        return modelAndView;
-    }
-
-    @GetMapping
-    public ResponseEntity<Iterable<Blog>> findAllBlog(){
-        List<Blog> blogList =  blogService.findAll();
-        if(blogList.isEmpty()){
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-        return new ResponseEntity<>(blogList, HttpStatus.OK);
-    }
+//    @GetMapping
+//    public ResponseEntity<Iterable<Blog>> findAllBlog(){
+//        List<Blog> blogList =  blogService.getAllBlog();
+//        if(blogList.isEmpty()){
+//            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+//        }
+//        return new ResponseEntity<>(blogList, HttpStatus.OK);
+//    }
 
     @GetMapping("/category")
     public ResponseEntity<Iterable<Category>> findAllCategory(){
