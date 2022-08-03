@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="/layout :: head">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+</head>
+<body>
+<h3>Employees</h3>
+<div>
+    <label>Search</label>
+    <form th:action="@{/employee/search}"
+          method="post" novalidate="novalidate">
+        <input type="text" name="name"/>
+        <input type="submit" value="search">
+    </form>
+</div>
+<p>
+    <a th:href="@{/employee/create}">
+        Add new employee
+    </a>
+</p>
+<div>
+    <!--<table id="product">-->
+    <!--    <thead>-->
+    <!--    <tr>-->
+    <!--        <th>ID</th>-->
+    <!--        <th>Name</th>-->
+    <!--        <th>Birthday</th>-->
+    <!--        <th>ID Card</th>-->
+    <!--        <th>Salary</th>-->
+    <!--        <th>Phone Number</th>-->
+    <!--        <th>Email</th>-->
+    <!--        <th>Address</th>-->
+    <!--        <th>Division</th>-->
+    <!--        <th>Position</th>-->
+    <!--        <th>Education</th>-->
+    <!--        <th>Username</th>-->
+    <!--        <th>Edit</th>-->
+    <!--        <th>Delete</th>-->
+    <!--        <th>View</th>-->
+
+    <!--    </tr>-->
+    <!--    </thead>-->
+    <!--    <tbody>-->
+    <!--    <tr th:each="row : ${employees}">-->
+    <!--        <td th:text="${row.id}"></td>-->
+    <!--        <td th:text="${row.name}"></td>-->
+    <!--        <td th:text="${row.birthday}"></td>-->
+    <!--        <td th:text="${row.idCard}"></td>-->
+    <!--        <td th:text="${row.salary}"></td>-->
+    <!--        <td th:text="${row.phoneNumber}"></td>-->
+    <!--        <td th:text="${row.email}"></td>-->
+    <!--        <td th:text="${row.address}"></td>-->
+    <!--        <td th:text="${row.division.name}"></td>-->
+    <!--        <td th:text="${row.position.name}"></td>-->
+    <!--        <td th:text="${row.educationDegree.name}"></td>-->
+    <!--        <td th:text="${row.user.username}"></td>-->
+    <!--        <td><a th:href="@{/employee/{id}/edit(id=${row.getId()})}">edit</a></td>-->
+    <!--&lt;!&ndash;        <td><a th:href="@{/employee/{id}/delete(id=${row.getId()})}">delete</a></td>&ndash;&gt;-->
+    <!--        <td>-->
+    <!--            &lt;!&ndash; Button trigger modal &ndash;&gt;-->
+    <!--            <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal"-->
+    <!--                    th:data-bs-target="'#cus' + ${row.id}">-->
+    <!--                Delete-->
+    <!--            </button>-->
+    <!--            &lt;!&ndash; Modal &ndash;&gt;-->
+    <!--            <div class="modal fade" th:id="cus + ${row.id}" data-bs-backdrop="static"-->
+    <!--                 data-bs-keyboard="false"-->
+    <!--                 tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">-->
+    <!--                <div class="modal-dialog">-->
+    <!--                    <div class="modal-content">-->
+    <!--                        <div class="modal-header">-->
+    <!--                            <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>-->
+    <!--                            <button type="button" class="btn-close" data-bs-dismiss="modal"-->
+    <!--                                    aria-label="Close"></button>-->
+    <!--                        </div>-->
+    <!--                        <div class="modal-body">-->
+    <!--                            Do you want delete product <span class="text-info" th:text="${row.name}"></span>-->
+    <!--                            with id = <span class="text-info" th:text="${row.id}"></span>-->
+    <!--                        </div>-->
+    <!--                        <div class="modal-footer">-->
+    <!--                            <a th:href="@{/employee/{id}/delete(id=${row.getId()})}"-->
+    <!--                               class="btn btn-outline-success">Delete</a>-->
+    <!--                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close-->
+    <!--                            </button>-->
+    <!--                        </div>-->
+    <!--                    </div>-->
+    <!--                </div>-->
+    <!--            </div>-->
+    <!--        </td>-->
+    <!--        <td><a th:href="@{/employee/{id}/view(id=${row.getId()})}">view</a></td>-->
+    <!--    </tr>-->
+    <!--    </tbody>-->
+    <!--</table>-->
+    <table id="product">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Birthday</th>
+            <th>ID Card</th>
+            <th>Salary</th>
+            <th>Phone Number</th>
+            <th>Email</th>
+            <th>Address</th>
+            <th>Division</th>
+            <th>Position</th>
+            <th>Education</th>
+            <th>Username</th>
+            <th>Edit</th>
+            <th>Delete</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="row : ${employees}">
+            <td th:text="${row.id}"></td>
+            <td th:text="${row.name}"></td>
+            <td th:text="${row.birthday}"></td>
+            <td th:text="${row.idCard}"></td>
+            <td th:text="${row.salary}"></td>
+            <td th:text="${row.phoneNumber}"></td>
+            <td th:text="${row.email}"></td>
+            <td th:text="${row.address}"></td>
+            <td th:text="${row.division.name}"></td>
+            <td th:text="${row.position.name}"></td>
+            <td th:text="${row.educationDegree.name}"></td>
+            <td th:text="${row.user.username}"></td>
+            <td>
+                <button class="btn btn-outline-danger">
+                    <a th:href="@{/employee/{id}/edit(id=${row.id})}">edit</a>
+                </button>
+            </td>
+            <!--            <td><a th:href="@{/customer/{id}/delete(id=${row.getId()})}">delete</a></td>-->
+            <td>
+                <!-- Button trigger modal -->
+                <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal"
+                        th:data-bs-target="'#cus' + ${row.id}">
+                    Delete
+                </button>
+                <!-- Modal -->
+                <div class="modal fade" th:id="cus + ${row.id}" data-bs-backdrop="static"
+                     data-bs-keyboard="false"
+                     tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                Do you want delete product <span class="text-info" th:text="${row.name}"></span>
+                                with id = <span class="text-info" th:text="${row.id}"></span>
+                            </div>
+                            <div class="modal-footer">
+                                <a th:href="@{/employee/{id}/delete(id=${row.getId()})}"
+                                   class="btn btn-outline-success">Delete</a>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </td>
+            <!--            <td><a th:href="@{/customer/{id}/view(id=${row.getId()})}">view</a></td>-->
+        </tr>
+        </tbody>
+    </table>
+    <div>
+        <a th:href="@{'/employee'(page=${employees.number - 1})}" th:if="${employees.hasPrevious()}">Previous</a>
+        <span th:text="${employees.number + 1}"></span>/<span th:text="${employees.totalPages}"></span>
+        <a th:href="@{'/employee'(page=${employees.number + 1})}" th:if="${employees.hasNext()}">Next</a>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+<footer th:replace="/layout :: footer"></footer>
+</body>
+</html>

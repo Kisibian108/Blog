@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="/layout :: head">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+</head>
+<body>
+<h3>Facility</h3>
+<div>
+    <label>Search</label>
+    <form th:action="@{/facility}"
+          novalidate="novalidate">
+        <input type="text" name="search" th:value="${keyword}"/>
+        <input type="submit" value="search">
+    </form>
+    <!--    <form class="d-flex" th:action="@{/customer}">-->
+    <!--        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"-->
+    <!--               name="search" th:value="${keyword}">-->
+    <!--        <button class="btn btn-outline-primary" type="submit">Search</button>-->
+    <!--    </form>-->
+</div>
+<p>
+    <button class="button"><a th:href="@{/facility/create}">
+        Add new facility
+    </a></button>
+</p>
+<div>
+    <table id="product">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Area</th>
+            <th>Cost</th>
+            <th>Max People</th>
+            <th>Rent Type</th>
+            <th>Facility Type</th>
+            <th>Standard Room</th>
+            <th>Convenience</th>
+            <th>Pool Area</th>
+            <th>Floor</th>
+            <th>Free</th>
+            <th>Edit</th>
+            <th>Delete</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="row : ${facilityList}">
+            <td th:text="${row.id}"></td>
+            <td th:text="${row.name}"></td>
+            <td th:text="${row.area}"></td>
+            <td th:text="${row.cost}"></td>
+            <td th:text="${row.maxPeople}"></td>
+            <td th:text="${row.rentType.name}"></td>
+            <td th:text="${row.facilityType.name}"></td>
+            <td th:text="${row.standardRoom}"></td>
+            <td th:text="${row.convenience}"></td>
+            <td th:text="${row.poolArea}"></td>
+            <td th:text="${row.floor}"></td>
+            <td th:text="${row.free}"></td>
+            <td>
+                <button type="submit" class="btn btn-outline-danger"><a
+                        th:href="@{/facility/{id}/edit(id=${row.getId()})}">Edit </a>
+                </button>
+            </td>
+            <!--            <td><a th:href="@{/customer/{id}/delete(id=${row.getId()})}">delete</a></td>-->
+            <td>
+                <!-- Button trigger modal -->
+                <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal"
+                        th:data-bs-target="'#cus' + ${row.id}">
+                    Delete
+                </button>
+                <!-- Modal -->
+                <div class="modal fade" th:id="cus + ${row.id}" data-bs-backdrop="static"
+                     data-bs-keyboard="false"
+                     tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                Do you want delete product <span class="text-info" th:text="${row.name}"></span>
+                                with id = <span class="text-info" th:text="${row.id}"></span>
+                            </div>
+                            <div class="modal-footer">
+                                <a th:href="@{/facility/{id}/delete(id=${row.getId()})}"
+                                   class="btn btn-outline-success">Delete</a>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </td>
+            <!--            <td><a th:href="@{/customer/{id}/view(id=${row.getId()})}">view</a></td>-->
+        </tr>
+        </tbody>
+    </table>
+    <div>
+        <a th:href="@{'/facility'(page=${facilityList.number - 1})}" th:if="${facilityList.hasPrevious()}">Previous</a>
+        <span th:text="${facilityList.number + 1}"></span>/<span th:text="${facilityList.totalPages}"></span>
+        <a th:href="@{'/facility'(page=${facilityList.number + 1})}" th:if="${facilityList.hasNext()}">Next</a>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+<footer th:replace="/layout :: footer"></footer>
+</body>
+</html>
