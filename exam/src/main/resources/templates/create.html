@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="/layout :: head"></head>
+<body>
+<h3>Add Product</h3>
+<p>
+    <a th:href="@{/trade}">
+        Back to trade list
+    </a>
+</p>
+<div id="form">
+    <form th:action="@{/save}" th:object="${trade}"
+          method="post" novalidate="novalidate">
+        <input type="hidden" th:field="*{id}"/>
+
+        <div>
+            <label>ID Trade </label>
+            <input type="text" th:field="*{idTrade}"/>
+            <p style="color: red" th:if="${#fields.hasErrors('idTrade')}" th:errors="*{idTrade}"></p>
+        </div>
+        <div>
+            <label>Customer Name</label>
+<!--            <input type="text" th:field="*{customerType}"/>-->
+            <select th:field="*{customer}">
+                <option th:each="item : ${customer}" th:value="${item.id}" th:text="${item.name}" ></option>
+            </select>
+        </div>
+        <div>
+            <label>Date</label>
+            <input type="date" th:field="*{date}"/>
+            <p style="color: red" th:if="${#fields.hasErrors('date')}" th:errors="*{date}"></p>
+        </div>
+        <div>
+            <label>Service</label>
+            <input type="text" th:field="*{serviceType}"/>
+            <p style="color: red" th:if="${#fields.hasErrors('serviceType')}" th:errors="*{serviceType}"></p>
+        </div>
+        <div>
+            <label>Price</label>
+            <input type="text" th:field="*{price}"/>
+            <p style="color: red" th:if="${#fields.hasErrors('price')}" th:errors="*{price}"></p>
+        </div>
+        <div>
+            <label>Area</label>
+            <input type="number" th:field="*{area}"/>
+            <p style="color: red" th:if="${#fields.hasErrors('area')}" th:errors="*{area}"></p>
+        </div>
+        <input type="submit" value="Save"/>
+    </form>
+</div>
+<footer th:replace="/layout :: footer"></footer>
+</body>
+</html>

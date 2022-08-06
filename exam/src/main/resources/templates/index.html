@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head th:replace="/layout :: head">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+</head>
+<body>
+<h3>Danh sach giao dich nha dat</h3>
+<div>
+    <form th:action="@{/trade}"
+          novalidate="novalidate">
+        <input type="text" name="search" th:value="${keyword}"  placeholder="Ten khach hang"/>
+        <button value="search" type="submit">Search</button>
+    </form>
+</div>
+<p>
+    <button class="button"><a th:href="@{/create}">
+        Add new trade
+    </a></button>
+</p>
+<p th:text="${message}"></p>
+<div>
+    <table id="product">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>ID Trade</th>
+            <th>Customer Name</th>
+            <th>Trading Date</th>
+            <th>Service Type</th>
+            <th>Price</th>
+            <th>Area</th>
+            <th>View</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="row : ${tradeList}">
+            <td th:text="${row.id}"></td>
+            <td th:text="${row.idTrade}"></td>
+            <td th:text="${row.customer.name}"></td>
+            <td th:text="${row.date}"></td>
+            <td th:text="${row.serviceType}"></td>
+            <td th:text="${row.price}"></td>
+            <td th:text="${row.area}"></td>
+            <!--            <td><a th:href="@{/customer/{id}/delete(id=${row.getId()})}">delete</a></td>-->
+            <td>
+                <!-- Button trigger modal -->
+                <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal"
+                        th:data-bs-target="'#tra' + ${row.id}">
+                    View
+                </button>
+                <!-- Modal -->
+                <div class="modal fade" th:id="tra + ${row.id}" data-bs-backdrop="static"
+                     data-bs-keyboard="false"
+                     tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                Ma giao dich: <span class="text-info" th:text="${row.idTrade}"></span><br>
+                                Ten khach hang: <span class="text-info" th:text="${row.customer.name}"></span><br>
+                                Ngay giao dich: <span class="text-info" th:text="${row.date}"> </span><br>
+                                Loai dich vu: <span class="text-info" th:text="${row.serviceType}"></span><br>
+                                Gia :<span class="text-info" th:text="${row.price}"></span><br>
+                                Dien tich: <p class="text-info" th:text="${row.area}"></p><br>
+                                Do you want delete  <span class="text-info" th:text="${row.customer.name}"></span>
+                                with id = <span class="text-info" th:text="${row.id}"></span>
+                            </div>
+                            <div class="modal-footer">
+                                <a th:href="@{/{id}/delete(id=${row.getId()})}"
+                                   class="btn btn-outline-success">Delete</a>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </td>
+            <!--            <td><a th:href="@{/customer/{id}/view(id=${row.getId()})}">view</a></td>-->
+        </tr>
+        </tbody>
+    </table>
+    <div>
+        <a th:href="@{'/trade'(page=${tradeList.number - 1})}" th:if="${tradeList.hasPrevious()}">Previous</a>
+        <span th:text="${tradeList.number + 1}"></span>/<span th:text="${tradeList.totalPages}"></span>
+        <a th:href="@{'/trade'(page=${tradeList.number + 1})}" th:if="${tradeList.hasNext()}">Next</a>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+<footer th:replace="/layout :: footer"></footer>
+</body>
+</html>
