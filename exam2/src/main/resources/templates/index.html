@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head th:replace="/layout :: head">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+</head>
+<body>
+<h3>Danh sach cau hoi</h3>
+<div>
+    <form th:action="@{/question}"
+          novalidate="novalidate">
+        <input type="text" name="search" th:value="${keyword}" placeholder="Ten"/>
+        <button value="search" type="submit">Search</button>
+    </form>
+</div>
+<p>
+    <button class="button"><a th:href="@{/create}">
+        Add new question
+    </a></button>
+</p>
+<p th:text="${message}"></p>
+<div>
+    <table id="product">
+        <thead>
+        <tr>
+            <th>STT</th>
+            <th>Tieu de</th>
+            <th>Loai cau hoi</th>
+            <th>Ngay dang</th>
+            <th>Tinh trang</th>
+            <th>Delete</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="row : ${questions}">
+            <td th:text="${row.id}"></td>
+            <td th:text="${row.title}"></td>
+            <td th:text="${row.questionType.name}"></td>
+            <td th:text="${row.date}"></td>
+            <td th:text="${row.status}"></td>
+            <!--            <td><a th:href="@{/customer/{id}/delete(id=${row.getId()})}">delete</a></td>-->
+            <td>
+                <!-- Button trigger modal -->
+                <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal"
+                        th:data-bs-target="'#cus' + ${row.id}">
+                    Delete
+                </button>
+                <!-- Modal -->
+                <div class="modal fade" th:id="cus + ${row.id}" data-bs-backdrop="static"
+                     data-bs-keyboard="false"
+                     tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                Do you want delete  <span class="text-info" th:text="${row.title}"></span>
+                                with id = <span class="text-info" th:text="${row.id}"></span>
+                            </div>
+                            <div class="modal-footer">
+                                <a th:href="@{/{id}/delete(id=${row.getId()})}"
+                                   class="btn btn-outline-success">Delete</a>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </td>
+            <!--            <td><a th:href="@{/customer/{id}/view(id=${row.getId()})}">view</a></td>-->
+        </tr>
+        </tbody>
+    </table>
+    <div>
+        <a th:href="@{'/question'(page=${questions.number - 1})}" th:if="${questions.hasPrevious()}">Previous</a>
+        <span th:text="${questions.number + 1}"></span>/<span th:text="${questions.totalPages}"></span>
+        <a th:href="@{'/question'(page=${questions.number + 1})}" th:if="${questions.hasNext()}">Next</a>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+<footer th:replace="/layout :: footer"></footer>
+</body>
+</html>
